@@ -1,0 +1,39 @@
+{% include 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="span-6" style="float: left">
+            <h1>Your Code</h1>
+
+            <form action="/content">
+            <label for="your-code"></label>
+            <textarea name="your-code" id="your-code" cols="50" rows="10" style="font-family: 'Consolas', monospace"></textarea>
+            <br/>
+            <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="span-6" style="float: right">
+            <h1>Assembler Output</h1>
+            <pre id="output"></pre>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        jQuery(function ($) {
+            $('form').submit(function(event) {
+                $.ajax({
+                    type: "POST",
+                    url: '/content',
+                    data: {'data': $('#your-code').val()},
+                    success: function (data, a, b) {
+                        $('#output').html(data)
+                    }
+               });
+                return false;
+            });
+        });
+
+
+
+    </script>
+{% endblock %}
