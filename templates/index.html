@@ -7,7 +7,17 @@
 
             <form action="/content">
             <label for="your-code"></label>
-            <textarea name="your-code" id="your-code" cols="50" rows="10" style="font-family: 'Consolas', monospace"></textarea>
+            <textarea name="your-code" id="your-code" cols="50" rows="10" style="font-family: 'Consolas', monospace">
+ORG 0
+LDA A
+ADD B
+STA C
+HLT
+A,   DEC 83
+B,   DEC -23
+C,   HEX 0
+END
+            </textarea>
             <br/>
             <button type="submit">Submit</button>
             </form>
