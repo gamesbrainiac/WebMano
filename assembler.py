@@ -97,7 +97,7 @@ class Assembler(object):
             memory.write(location, instruction)
             location += 1
 
-        return program_start
+        return program_start, location
 
     @staticmethod
     def tobin(x, count=16):
@@ -168,7 +168,7 @@ class Assembler(object):
 
     def show_ins_table(self):
         self.gen_bin_instructions()
-        table = PrettyTable(["Location", "Instruction"])
+        table = PrettyTable(["Location", "Value"])
         for location in self.ins_table:
             table.add_row([self.tobin(location, 12)] + self.ins_table[location])
         return table.get_string()
