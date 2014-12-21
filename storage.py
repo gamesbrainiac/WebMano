@@ -1,22 +1,11 @@
 # encoding=utf-8
 
 from binascii import hexlify
+from itertools import izip_longest, chain
 import re
-import collections
-from itertools import islice
 from pprint import pprint
 
 from prettytable import PrettyTable
-
-def consume(iterator, n):
-    """Advance the iterator n-steps ahead. If n is none, consume entirely."""
-    # Use functions that consume iterators at C speed.
-    if n is None:
-        # feed the entire iterator into a zero-length deque
-        collections.deque(iterator, maxlen=0)
-    else:
-        # advance to the empty slice starting at position n
-        next(islice(iterator, n, n), None)
 
 
 def tobin(x, count=16):
@@ -31,12 +20,12 @@ def store_program(data):
         line: [hexlify(d) for d in line] for line in lines
     }
 
-    for key in _out:
+    for key in lines:
         _out[key] += ['0D']
 
         l = _out[key]
-        for a, b in zip(l, l[1:]):
-            to_add = [tobin(int(s, 16), 4) for i, s in enumerate(a + b)]
+        for a, b in izip_longest(l[::2], l[1::2]):
+            to_add = [tobin(int(s, 16), 4) for i, s in enumerate(a + (b if b else ''))]
             _ret.append(to_add)
 
     return _ret
@@ -51,8 +40,9 @@ def show_store_program(data):
 def show_bin_rep(data):
 
     table = PrettyTable(['Binary Representation'])
-    for val in show_store_program(data):
-        table.add_row([val])
+    bins = list(chain.from_iterable(store_program(data)))
+    for i in range(0, len(bins), 4):
+        table.add_row([bins[i] + bins[i+1] + bins[i + 2] + bins[i + 3]])
     return table.get_string()
 
 if __name__ == '__main__':
@@ -67,7 +57,10 @@ if __name__ == '__main__':
     C,   HEX 0
          END
     """
+    # program = 'ORG 0'
     # data = store_program(program)
 
     # pprint(data)
-    pprint(show_store_program(program))
+    # pprint(show_store_program(program))
+    print show_bin_rep(program)
+    pprint(store_program(program))
